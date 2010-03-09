@@ -19,10 +19,13 @@ class ConsumerController < ApplicationController
   def complete
     parameters = params.reject{|k,v|request.path_parameters[k]}
     openid_request = consumer.complete(parameters, complete_url)
+    Rails.logger.info consumer.inspect
+    Rails.logger.info openid_request.inspect
     case openid_request.status
     when OpenID::Consumer::SUCCESS
       flash[:success] = "Verification of #{openid_request.display_identifier}"
                         " succeeded."
+      #user_attr(openid_request.identity_url)
     when OpenID::Consumer::FAILURE
       if openid_request.display_identifier
         flash[:error] = "Verification of #{openid_request.display_identifier}"
@@ -46,5 +49,25 @@ class ConsumerController < ApplicationController
 
   def store
     @store ||= ActiveRecordStore.new
+  end
+
+  def user_attr identity_url, nonce
+    require 'uri'
+    require 'cgi'
+    require 'open-uri'
+    uri = URI.parse('https://i.mydocomo.com/api/imode/g-info')
+    param = { }
+    param['ver'] = '1.0'
+    param['openid'] = identity_url
+    param['nonce'] = nonce
+    param['GUID'] = ''
+    param['UA'] = ''
+    uri.query = param.map{|k,v| "#{k}=#{CGI.escape(v)}"}.join("&")
+    attr = {}
+    open(uri.to_s).read.chomp.split(/\r\n/).each do |p,v|
+      attr[p] = v
+    end
+    Rails.logger.info attr
+    attr
   end
 end
