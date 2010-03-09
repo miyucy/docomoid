@@ -7,6 +7,9 @@
 <% unless flash[:alert].blank? %>
     <div><%= flash[:alert] %></div>
 <% end %>
-<form method="get" action="<%= url_for :action => 'start' %>">
-    <input type="submit" value="docomo ID で ログイン"/>
-</form>
+<div id="verify-form">
+    <form method="get" accept-charset="UTF-8" action="<%= url_for :action => 'start' %>">
+        <input type="text" class="openid" name="openid_identifier" />
+        <input type="submit" value="Verify"/>
+    </form>
+</div>
