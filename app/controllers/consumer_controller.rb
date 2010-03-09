@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class ConsumerController < ApplicationController
   layout nil
 
@@ -18,16 +19,13 @@ class ConsumerController < ApplicationController
 
   def complete
     parameters = params.reject{|k,v|request.path_parameters[k]}
-    #Rails.logger.info parameters.inspect
-    #Rails.logger.info complete_url.inspect
     openid_request = consumer.complete(parameters, complete_url)
-    #Rails.logger.info consumer.inspect
-    #Rails.logger.info openid_request.inspect
     case openid_request.status
     when OpenID::Consumer::SUCCESS
-      flash[:success] = "Verification of #{openid_request.display_identifier}"
-                        " succeeded."
-      user_attr(params["openid.identity"], params["openid.response_nonce"])
+      # flash[:success] = "Verification of #{openid_request.display_identifier}"
+      #                   " succeeded."
+      info = g_info(params["openid.identity"], params["openid.response_nonce"])
+      flash[:success] = "お前のiモードIDは#{info['GUID']}で、使ってる機種は#{info['UA']}であってる？";
     when OpenID::Consumer::FAILURE
       if openid_request.display_identifier
         flash[:error] = "Verification of #{openid_request.display_identifier}"
@@ -53,7 +51,7 @@ class ConsumerController < ApplicationController
     @store ||= ActiveRecordStore.new
   end
 
-  def user_attr identity_url, nonce
+  def g_info identity_url, nonce
     require 'uri'
     require 'cgi'
     require 'open-uri'
@@ -65,13 +63,11 @@ class ConsumerController < ApplicationController
     param['GUID'] = ''
     param['UA'] = ''
     uri.query = param.map{|k,v| "#{k}=#{CGI.escape(v)}"}.join("&")
-    raw = open(uri.to_s).read
-    Rails.logger.info raw
     attr = {}
-    raw.chomp.split(/\r\n/).each do |p,v|
-      attr[p] = v
+    open(uri.to_s).read.chomp.split(/\r\n/).each do |line|
+      k, v = line.split(/:/, 2)
+      attr[k] = p
     end
-    Rails.logger.info attr.inspect
     attr
   end
 end
