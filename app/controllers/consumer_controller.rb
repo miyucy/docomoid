@@ -18,16 +18,16 @@ class ConsumerController < ApplicationController
 
   def complete
     parameters = params.reject{|k,v|request.path_parameters[k]}
-    Rails.logger.info parameters.inspect
-    Rails.logger.info complete_url.inspect
+    #Rails.logger.info parameters.inspect
+    #Rails.logger.info complete_url.inspect
     openid_request = consumer.complete(parameters, complete_url)
-    Rails.logger.info consumer.inspect
-    Rails.logger.info openid_request.inspect
+    #Rails.logger.info consumer.inspect
+    #Rails.logger.info openid_request.inspect
     case openid_request.status
     when OpenID::Consumer::SUCCESS
       flash[:success] = "Verification of #{openid_request.display_identifier}"
                         " succeeded."
-      user_attr(openid_request.identity_url)
+      user_attr(params["openid.identity"], params["openid.response_nonce"])
     when OpenID::Consumer::FAILURE
       if openid_request.display_identifier
         flash[:error] = "Verification of #{openid_request.display_identifier}"
@@ -65,11 +65,13 @@ class ConsumerController < ApplicationController
     param['GUID'] = ''
     param['UA'] = ''
     uri.query = param.map{|k,v| "#{k}=#{CGI.escape(v)}"}.join("&")
+    raw = open(uri.to_s).read
+    Rails.logger.info raw
     attr = {}
-    open(uri.to_s).read.chomp.split(/\r\n/).each do |p,v|
+    raw.chomp.split(/\r\n/).each do |p,v|
       attr[p] = v
     end
-    Rails.logger.info attr
+    Rails.logger.info attr.inspect
     attr
   end
 end
