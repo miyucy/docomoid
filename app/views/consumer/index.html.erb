@@ -1,0 +1,12 @@
+<% unless flash[:success].blank? %>
+    <div><%= flash[:success] %></div>
+<% end %>
+<% unless flash[:error].blank? %>
+    <div><%= flash[:error] %></div>
+<% end %>
+<% unless flash[:alert].blank? %>
+    <div><%= flash[:alert] %></div>
+<% end %>
+<form method="get" action="<%= url_for :action => 'start' %>">
+    <input type="submit" value="docomo ID で ログイン"/>
+</form>
