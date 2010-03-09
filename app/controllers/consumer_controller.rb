@@ -71,7 +71,7 @@ class ConsumerController < ApplicationController
     attr = {}
     open(uri.to_s).read.chomp.split(/\r\n/).each do |line|
       k, v = line.split(/:/, 2)
-      attr[k] = p
+      attr[k] = v
     end
     attr
   end
