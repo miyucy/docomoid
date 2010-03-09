@@ -1,6 +1,11 @@
 class ConsumerController < ApplicationController
   layout nil
 
+  def index
+    params.each{ |k,v| rails Rails.logger.info "{$k} : {$v}" }
+  end
+
+
   DOCOMO_OP_IDENTIFIER = "https://i.mydocomo.com"
   def start
     openid_request = consumer.begin(DOCOMO_OP_IDENTIFIER)
