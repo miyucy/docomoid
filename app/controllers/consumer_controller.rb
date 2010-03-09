@@ -25,6 +25,7 @@ class ConsumerController < ApplicationController
       # flash[:success] = "Verification of #{openid_request.display_identifier}"
       #                   " succeeded."
       info = g_info(params["openid.identity"], params["openid.response_nonce"])
+      Rails.logger.info info.inspect
       if info['result'] == '0000'
         session[:guid] = info['GUID']
         session[:ua] = info['UA']
