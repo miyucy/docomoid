@@ -2,7 +2,7 @@ class ConsumerController < ApplicationController
   layout nil
 
   def index
-    params.each{ |k,v| rails Rails.logger.info "{$k} : {$v}" }
+    params.each{ |k,v| Rails.logger.info "{$k} : {$v}" }
   end
 
 
