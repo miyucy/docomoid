@@ -18,6 +18,8 @@ class ConsumerController < ApplicationController
 
   def complete
     parameters = params.reject{|k,v|request.path_parameters[k]}
+    Rails.logger.info parameters.inspect
+    Rails.logger.info complete_url.inspect
     openid_request = consumer.complete(parameters, complete_url)
     Rails.logger.info consumer.inspect
     Rails.logger.info openid_request.inspect
@@ -25,7 +27,7 @@ class ConsumerController < ApplicationController
     when OpenID::Consumer::SUCCESS
       flash[:success] = "Verification of #{openid_request.display_identifier}"
                         " succeeded."
-      #user_attr(openid_request.identity_url)
+      user_attr(openid_request.identity_url)
     when OpenID::Consumer::FAILURE
       if openid_request.display_identifier
         flash[:error] = "Verification of #{openid_request.display_identifier}"
