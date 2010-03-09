@@ -10,7 +10,7 @@ class ServerController < ApplicationController
   <XRD>
     <Service priority="0">
       <Type>#{OpenID::OPENID_IDP_2_0_TYPE}</Type>
-      <URI>#{url_for(:controller => 'server', :only_path => false)}</URI>
+      <URI>#{login_url}</URI>
     </Service>
   </XRD>
 </xrds:XRDS>
