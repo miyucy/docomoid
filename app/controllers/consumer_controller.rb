@@ -2,7 +2,7 @@ class ConsumerController < ApplicationController
   layout nil
 
   def index
-    params.each{ |k,v| Rails.logger.info "#{k} : #{v}" }
+    response.headers['X-XRDS-Location'] = url_for(:controller => 'server', :action => 'xrds', :only_path => false)
   end
 
 
