@@ -1,15 +1,19 @@
-<% unless flash[:success].blank? %>
-    <div><%= flash[:success] %></div>
-<% end %>
-<% unless flash[:error].blank? %>
-    <div><%= flash[:error] %></div>
-<% end %>
-<% unless flash[:alert].blank? %>
-    <div><%= flash[:alert] %></div>
-<% end %>
-<div id="verify-form">
-    <form method="get" accept-charset="UTF-8" action="<%= url_for :action => 'start' %>">
-        <input type="text" class="openid" name="openid_identifier" />
-        <input type="submit" value="Verify"/>
-    </form>
-</div>
+<html>
+<head></head>
+<body>
+    <% unless flash[:success].blank? -%>
+        <div><%= flash[:success] %></div>
+    <% end %>
+    <% unless flash[:error].blank? -%>
+        <div><%= flash[:error] %></div>
+    <% end %>
+    <% unless flash[:alert].blank? -%>
+        <div><%= flash[:alert] %></div>
+    <% end %>
+    <div id="verify-form">
+        <form method="get" accept-charset="UTF-8" action="<%= url_for :action => 'start' %>">
+            <input type="submit" value="docomo ID で ログイン"/>
+        </form>
+    </div>
+</body>
+</html>
