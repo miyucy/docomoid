@@ -16,12 +16,12 @@ class ConsumerController < ApplicationController
     openid_request = consumer.complete(parameters, complete_url)
     case openid_request.status
     when OpenID::Consumer::SUCCESS
-      flash[:success] = "Verification of #{oidresp.display_identifier}"
+      flash[:success] = "Verification of #{openid_request.display_identifier}"
                         " succeeded."
     when OpenID::Consumer::FAILURE
-      if display_identifier
-        flash[:error] = "Verification of #{oidresp.display_identifier}"
-                        " failed: #{oidresp.message}"
+      if openid_request.display_identifier
+        flash[:error] = "Verification of #{openid_request.display_identifier}"
+                        " failed: #{openid_request.message}"
       else
         flash[:error] = "Verification failed: #{openid_request.message}"
       end
