@@ -25,7 +25,11 @@ class ConsumerController < ApplicationController
       # flash[:success] = "Verification of #{openid_request.display_identifier}"
       #                   " succeeded."
       info = g_info(params["openid.identity"], params["openid.response_nonce"])
-      flash[:success] = "お前のiモードIDは#{info['GUID']}で、使ってる機種は#{info['UA']}であってる？";
+      if info['result'] == '0000'
+        session[:guid] = info['GUID']
+        session[:ua] = info['UA']
+      end
+      flash[:success] = "お前のiモードIDは#{session[:guid]}で、使ってる機種は#{session[:ua]}であってる？";
     when OpenID::Consumer::FAILURE
       if openid_request.display_identifier
         flash[:error] = "Verification of #{openid_request.display_identifier}"
